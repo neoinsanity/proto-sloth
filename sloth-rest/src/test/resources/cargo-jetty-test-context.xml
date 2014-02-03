@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+               http://www.springframework.org/schema/beans
+               http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <bean id="cargoJettyContainer" class="test.sloth.cargo.CargoJettyContainer">
+        <!--suppress InjectionValueTypeInspection -->
+        <property name="configuration" ref="localConfiguration"/>
+        <property name="deployable" ref="deployable"/>
+    </bean>
+
+    <bean id="deployable" factory-bean="deployableFactory" factory-method="createDeployable">
+        <constructor-arg index="0" value="jetty6x"/>
+        <constructor-arg index="1" value="file:./src/main/webapp"/>
+        <constructor-arg index="2" ref="deployableType"/>
+    </bean>
+
+    <bean id="deployableFactory" class="org.codehaus.cargo.generic.deployable.DefaultDeployableFactory"/>
+
+    <bean id="deployableType" class="org.codehaus.cargo.container.deployable.DeployableType">
+        <constructor-arg index="0" value="war"/>
+    </bean>
+
+    <bean id="localConfiguration" class="org.codehaus.cargo.container.configuration.LocalConfiguration"
+          factory-bean="configurationFactory" factory-method="createConfiguration">
+        <constructor-arg index="0" value="jetty6x"/>
+        <constructor-arg index="1" ref="containerType"/>
+        <constructor-arg index="2" ref="configurationType"/>
+    </bean>
+
+    <bean id="configurationFactory" class="org.codehaus.cargo.generic.configuration.DefaultConfigurationFactory"/>
+
+    <bean id="containerType" class="org.codehaus.cargo.container.ContainerType">
+        <constructor-arg index="0" value="embedded"/>
+    </bean>
+
+    <bean id="configurationType" class="org.codehaus.cargo.container.configuration.ConfigurationType">
+        <constructor-arg index="0" value="standalone"/>
+    </bean>
+
+</beans>
