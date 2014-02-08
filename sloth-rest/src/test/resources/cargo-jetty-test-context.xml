@@ -12,7 +12,7 @@
     </bean>
 
     <bean id="deployable" factory-bean="deployableFactory" factory-method="createDeployable">
-        <constructor-arg index="0" value="jetty6x"/>
+        <constructor-arg index="0" value="jetty9x"/>
         <constructor-arg index="1" value="file:./src/main/webapp"/>
         <constructor-arg index="2" ref="deployableType"/>
     </bean>
