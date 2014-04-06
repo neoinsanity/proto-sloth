@@ -7,8 +7,8 @@ package proto.sloth.rest;
 
 import com.gargoylesoftware.htmlunit.HttpMethod;
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.WebRequestSettings;
 import com.gargoylesoftware.htmlunit.WebResponse;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.test.context.ContextConfiguration;
@@ -33,11 +33,10 @@ public class TestWorldPlainRestPoint
         final WebClient client = new WebClient();
 
         {// world get
-            WebRequestSettings webRequestSettings =
-              new WebRequestSettings(new URL("http://localhost:8092/webapp/sloth/world"));
-            WebResponse webResponse = client.loadWebResponse(webRequestSettings);
+            final HtmlPage page = client.getPage("http://localhost:8092/webapp/sloth/world");
+            final WebResponse response = page.getWebResponse();
 
-            final int statusCode = webResponse.getStatusCode();
+            final int statusCode = response.getStatusCode();
             assert statusCode == 200 : "Status code should be 200, not: " + statusCode;
         }
     }

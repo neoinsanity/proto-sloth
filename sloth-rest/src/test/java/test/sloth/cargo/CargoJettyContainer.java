@@ -11,6 +11,9 @@ import org.codehaus.cargo.container.ContainerType;
 import org.codehaus.cargo.container.EmbeddedLocalContainer;
 import org.codehaus.cargo.container.configuration.LocalConfiguration;
 import org.codehaus.cargo.container.deployable.Deployable;
+import org.codehaus.cargo.container.jetty.Jetty9xEmbeddedLocalContainer;
+import org.codehaus.cargo.container.jetty.Jetty9xEmbeddedStandaloneLocalConfiguration;
+import org.codehaus.cargo.container.jetty.Jetty9xStandaloneLocalConfiguration;
 import org.codehaus.cargo.generic.DefaultContainerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -51,7 +54,7 @@ public class CargoJettyContainer {
         configuration.setProperty("cargo.servlet.port", "8092");
 
         container = (EmbeddedLocalContainer) new DefaultContainerFactory().
-                createContainer("jetty6x", ContainerType.EMBEDDED, configuration);
+                createContainer("jetty9x", ContainerType.EMBEDDED, configuration);
 
         try {
             container.start();
@@ -60,6 +63,7 @@ public class CargoJettyContainer {
             container.stop();
             throw e; // NEVER handle the exception. It is only trapped here to trigger the container shutdown.
         }
+        log.info("start initialized.");
     }
 
     @PreDestroy
@@ -68,9 +72,10 @@ public class CargoJettyContainer {
         log.info("stop()");
 
         try {
-            container.setTimeout(1000/*ms*/ * 3);
+            //container.setTimeout(1000/*ms*/ * 3);
             container.stop();
             Thread.yield();
+            Thread.sleep(500);
         } catch (Exception e) {
             log.warn("Exception while waiting for Cargo/Jetty to stop: " + e.getMessage(), e);
         }
